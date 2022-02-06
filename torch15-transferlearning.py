@@ -31,7 +31,14 @@ data_transforms = {
     ])
 }
 
-data_dir = 'data/hymenoptera_data'
+data_dir = 'data/hymenoptera_data' 
+# Folder hymenoptera_data:
+#   - train:
+#       - ants
+#       - bees
+#   - val:
+#       - ants
+#       - bees
 image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x),
                                           data_transforms[x])
                   for x in ['train', 'val']}
@@ -130,11 +137,11 @@ def train_model(model, criterion, optimizer, scheduler, num_epochs=25):
 #### Finetuning the convnet ####
 # load a pretrained model and reset final fully connected layer.
 
-model = models.resnet18(pretrained=True)
-num_ftrs = model.fc.in_features
+model = models.resnet18(pretrained=True)   # pretrained = T - optimized weights that are trained before
+num_ftrs = model.fc.in_features     # number of input features for the last layers
 # Here the size of each output sample is set to 2
 # Alternatively, it can be generalized to nn.Linear(num_ftrs, len(class_names))
-model.fc = nn.Linear(num_ftrs, 2)
+model.fc = nn.Linear(num_ftrs, 2)   # output size = 2 - number of classes
 
 model = model.to(device)
 
