@@ -11,11 +11,12 @@ import torch.nn as nn
 # 1) lazy way: save whole model
 torch.save(model, PATH)
 
+# cons: serialized data is bounded to specific classes and the exact directory structure.
 # model class must be defined somewhere
-model = torch.load(PATH)
+model = torch.load(PATH) 
 model.eval()
 
-# 2) recommended way: save only the state_dict
+# 2) recommended way: save only the state_dict -> parameters used later for inference
 torch.save(model.state_dict(), PATH)
 
 # model must be created again with parameters
@@ -38,7 +39,7 @@ model = Model(n_input_features=6)
 # train your model...
 
 ####################save all ######################################
-for param in model.parameters():
+for param in model.parameters():  # for comparing params before and after creating saved model
     print(param)
 
 # save and load entire model

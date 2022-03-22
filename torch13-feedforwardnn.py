@@ -4,6 +4,7 @@ import torch.nn as nn
 import collections.abc as container_abcs
 
 # from torch._six import collections.abc as container_abcs
+import torchvision
 import torchvision.transforms as transforms   # ??? container.abcs problem
 import matplotlib.pyplot as plt
 
@@ -18,15 +19,18 @@ num_epochs = 2
 batch_size = 100
 learning_rate = 0.001
 
+transform = transforms.Compose([transforms.ToTensor(),
+                                transforms.Normalize((0.1307,), (0.3081,))])
+
 # MNIST dataset
 train_dataset = torchvision.datasets.MNIST(root='./data',
                                            train=True,
-                                           transform=transforms.ToTensor(),
+                                           transform=transform,
                                            download=True)
 
 test_dataset = torchvision.datasets.MNIST(root='./data',
                                            train=False,
-                                           transform=transforms.ToTensor(),
+                                           transform=transform,
                                            download=False)
 
 # Data Loader
@@ -52,7 +56,7 @@ class NeuralNet(nn.Module):
         super(NeuralNet, self).__init__()
         self.input_size = input_size
         self.l1 = nn.Linear(input_size, hidden_size)
-        self.relu - nn.ReLU()
+        self.relu = nn.ReLU()
         self.l2 = nn.Linear(hidden_size, num_classes)
         
     def forward(self, x):
@@ -101,7 +105,9 @@ with torch.no_grad():
         # max returns (value, index)
         _, predicted = torch.max(outputs.data, 1)
         n_samples += labels.size(0)
-        n_correct += (predicted == labels).sum(),item()
+        n_correct += (predicted == labels).sum().item()
         
     acc = 100.0 * n_correct / n_samples
     print(f'Accuracy of the network on the 10000 test images: {acc} %')
+    
+torch.save(model.state_dict(), "mnist_ffn.pth")

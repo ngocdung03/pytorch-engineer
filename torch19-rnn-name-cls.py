@@ -56,7 +56,7 @@ def category_from_output(output):
 
 print(category_from_output(output))
 
-criterion = nn.NLLLoss()
+criterion = nn.NLLLoss()  #negative log likelihood
 learning_rate = 0.005
 optimizer = torch.optim.SGD(rnn.parameters(), lr=learning_rate)
 
