@@ -14,10 +14,10 @@ num_epochs = 2
 batch_size = 100
 learning_rate = 0.001
 
-input_size = 28
+input_size = 28  # for image data, loosely treat one dimension as sequence and other dimension as feature/input size --> consider one row at a time
 sequence_length = 28
 hidden_size = 128
-num_layers = 2
+num_layers = 2  # stack 2 RNNs together. 2nd RNN takes output from the 1st as an input --> further improve model
 
 # MNIST dataset 
 train_dataset = torchvision.datasets.MNIST(root='./data', 
@@ -45,8 +45,8 @@ class RNN(nn.Module):
         super(RNN, self).__init__()
         self.num_layers = num_layers
         self.hidden_size = hidden_size
-        self.rnn = nn.RNN(input_size, hidden_size, num_layers, batch_first=True)
-        # -> x needs to be: (batch_size, seq, input_size)
+        self.rnn = nn.RNN(input_size, hidden_size, num_layers, batch_first=True)  # RNN from Pytorch, can be alternated by nn.GRU or nn.LSTM; having batch size as first dimension
+        # -> shape of input (x) needs to be: (batch_size, seq, input_size)
         
         # or:
         #self.gru = nn.GRU(input_size, hidden_size, num_layers, batch_first=True)
@@ -56,7 +56,7 @@ class RNN(nn.Module):
     def forward(self, x):
         # Set initial hidden states (and cell states for LSTM)
         h0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(device) 
-        #c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(device) 
+        #c0 = torch.zeros(self.num_layers, x.size(0), self.hidden_size).to(device)   #add this for LSTM model
         
         # x: (n, 28, 28), h0: (2, n, 128)
         
@@ -69,7 +69,7 @@ class RNN(nn.Module):
         # out: (n, 28, 128)
         
         # Decode the hidden state of the last time step
-        out = out[:, -1, :]
+        out = out[:, -1, :]  # take only the values of the last step in the batch
         # out: (n, 128)
          
         out = self.fc(out)
