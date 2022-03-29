@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-    
 # data: https://download.pytorch.org/tutorial/data.zip
 import io
 import os
